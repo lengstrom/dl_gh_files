@@ -16,4 +16,4 @@ pip install requests
 mkdir ~/.aws
 cd ~
 
-#curl https://raw.githubusercontent.com/lengstrom/search_all_users/master/search_for_range.py > search_for_range.py
+curl https://raw.githubusercontent.com/lengstrom/search_all_users/master/search_for_range.py > search_for_range.py

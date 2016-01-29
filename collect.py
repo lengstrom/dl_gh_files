@@ -53,6 +53,7 @@ if __name__ == "__main__":
     out_dir = "./out"
     files_out = []
     bucket = s3.Bucket('ghallfiles')
+    keys = []
     for n, v in enumerate(subgroups):
         try:
             key = "files_%s" % n
@@ -63,6 +64,7 @@ if __name__ == "__main__":
             files_out.append(file_to_make)
             store['df'] = v
             store.close()
+            keys.append(key)
 
             with open(file_to_make, 'rb') as f:
                 bucket.put_object(Key=key, Body=f)
@@ -70,4 +72,24 @@ if __name__ == "__main__":
         except:
             pdb.set_trace()
 
-    print files_out
+    job_params = keys
+    with open(os.path.join(os.path.expanduser('~'), '.aws/config'),'r') as f:
+        config = f.read()
+        config = config.replace('\n', '\\n')
+
+    with open(os.path.join(os.path.expanduser('~'), '.aws/credentials'),'r') as f:
+        credentials = f.read()
+        credentials = credentials.replace('\n', '\\n')
+
+    with open('./user-data.sh','r') as f:
+        base = f.readlines()
+
+    base.append("printf \"%s\" > ~/.aws/config \n" % config)
+    base.append("printf \"%s\" > ~/.aws/credentials \n" % credentials)
+
+    for i in job_params:
+        key = i
+        cp = base[:]
+        cp.append('screen -d -m python search_for_range.py "%s"' % (key,))
+        with open(os.path.join('amazon', key), 'w') as f:
+            f.writelines(cp)
