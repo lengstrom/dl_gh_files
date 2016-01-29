@@ -60,7 +60,7 @@ if __name__ == "__main__":
             print r.headers
             pdb.set_trace()
 
-        file_name = strip_utf8(end_of_url).replace('/', '__')
+        file_name = strip_utf8(end_of_url).replace('/', '_||_')
         with codecs.open(os.path.join(downloaded_dir, file_name), 'w', encoding='utf-8') as f:
             f.write(r.text)
     
