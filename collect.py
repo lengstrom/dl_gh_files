@@ -90,6 +90,6 @@ if __name__ == "__main__":
     for i in job_params:
         key = i
         cp = base[:]
-        cp.append('screen -d -m python search_for_range.py "%s"' % (key,))
+        cp.append('screen -d -m python download_range.py "%s"' % (key,))
         with open(os.path.join('amazon', key), 'w') as f:
             f.writelines(cp)
