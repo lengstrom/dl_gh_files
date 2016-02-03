@@ -4,7 +4,7 @@ from subprocess import Popen
 all_dfs = []
 for i in ["authors_" + str(j) for j in range(20)]:
     tmp_dfs = []
-    path = '/Users/loganengstrom/s3/' + i
+    path = '/Users/loganengstrom/save/s3/' + i
     for f in os.listdir(path):
         df = pd.read_csv(filepath_or_buffer=os.path.join(path, f), index_col=0)
         tmp_dfs.append(df)
@@ -13,8 +13,8 @@ for i in ["authors_" + str(j) for j in range(20)]:
     print ">>> Finished with %s" % path
 
 all_shell = pd.concat(all_dfs)
-all_shell_noforks = all_shell[all_shell['fork'] == False].reset_index()
-fp = '/Users/loganengstrom/projects/download_all_ghfiles/data/all_shell_noforks.h5'
+all_shell_noforks = all_shell.reset_index()
+fp = '/Users/loganengstrom/projects/download_all_ghfiles/data/all_shell_nohistory.h5'
 if os.path.exists(fp):
     os.remove(fp)
 

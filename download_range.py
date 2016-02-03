@@ -16,21 +16,23 @@ def archive_directory(path, Key, bucket):
         bucket.put_object(Key=Key, Body=f)
     os.remove(archive_path)
 
-def complete_url(url):
+def complete_url(url, tries=3):
     r = requests.get(url)
     if r.status_code != 200:
         code = r.status_code
         if code == 404:
             return None
 
-        if code == 503:
-            print "503"
-            time.sleep(5)
-            return complete_url(url)
-
         print "Problem!"
+        print "code: %s" % (code,)
         print r.headers
-        pdb.set_trace()
+        
+        time.sleep(10)
+        tries -= 1
+        if tries > -1:
+            return complete_url(url, tries)
+        return None
+
     else:
          return r   
 
