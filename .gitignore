@@ -3,5 +3,6 @@ amazon
 out
 all_files
 *zip
+*.h5
 data
 *pyc
