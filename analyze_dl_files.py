@@ -12,20 +12,41 @@ fish_histories = df[df['html'].str.lower().str.contains('fish_history$')]
 sh_histories = df[df['html'].str.lower().str.contains('/sh_history$')]
 csh_histories = df[df['html'].str.lower().str.contains('/csh_history$')]
 tcsh_histories = df[df['html'].str.lower().str.contains('/tcsh_history$')]
+histories_list = [bash_histories, zsh_histories, fish_histories, sh_histories, csh_histories, tcsh_histories]
 
-histories = pd.concat([bash_histories, zsh_histories, fish_histories, sh_histories, csh_histories, tcsh_histories])
+for i in histories_list:
+    print i.shape
+histories = pd.concat(histories_list)
 
-print df.shape
-store = pd.HDFStore('/Users/loganengstrom/projects/download_all_ghfiles/data/all_shell_nohistory.h5')
+# no history
+no_history = '/Users/loganengstrom/projects/download_all_ghfiles/data/all_shell_nohistory.h5'
+store = pd.HDFStore(no_history)
 df = store['df']
 store.close()
 df = df[~df['html'].str.lower().str.contains('_history$')]
 df = df[df['fork'] == False]
+print df.shape
 
 filters = ['bower', 'node_module', 'npm', 'bench.sh']
 df = df[~df['html'].str.lower().str.contains('history')]
 for i in filters:
     df = df[~df['html'].str.lower().str.contains(i)]
 
-print df.shape
+histories_p = 'out/histories.h5'
+all_else = 'out/all_else.h5'
+
+if os.path.exists(histories_p):
+    os.remove(histories_p)
+
+store = pd.HDFStore(histories_p)
+store['df'] = histories
+store.close()
+
+if os.path.exists(all_else):
+    os.remove(all_else)
+
+store = pd.HDFStore(all_else)
+store['df'] = df
+store.close()
+
 pdb.set_trace()
